@@ -1,0 +1,8 @@
+.sidebarmenu {
+  background: #fff;
+  box-shadow: var(--box-shadow);
+  border: 1px solid var(--secondary-color);
+  padding: 5px;
+  border-radius: 11px;
+}
+
