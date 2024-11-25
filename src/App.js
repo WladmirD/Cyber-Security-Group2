@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect, NavLink } from 'react-router-dom';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
+import ChatBox from './components/ChatBox';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import bannerIMG from "./img/bannernew.jpg";
@@ -24,6 +25,7 @@ function App() {
               <NavLink to="/contact" className="nav-link" activeClassName="active">Contact Us</NavLink>
               <NavLink to="/login" className="nav-link" activeClassName="active">Login</NavLink>
               <NavLink to="/signup" className="nav-link" activeClassName="active">Sign Up</NavLink>
+              <NavLink to="/chatbox" className="nav-link" activeClassName="active">Chat Room</NavLink>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
@@ -51,7 +53,7 @@ function App() {
                     </NavLink>
                   </li>
                   <li className="nav-item">
-                    <NavLink to="/chat-rooms" activeClassName="active" className="nav-link">
+                    <NavLink to="/chatbox" activeClassName="active" className="nav-link">
                       Chat Rooms
                     </NavLink>
                   </li>
@@ -64,8 +66,7 @@ function App() {
             <Switch>
               <Route path="/login" component={Login} />
               <Route path="/signup" component={SignUp} />
-              {/* Assuming you have a route for chat rooms */}
-              <Route path="/chat-rooms" component={() => <div>Chat Rooms Component</div>} />
+              <Route path="/chatbox" component={ChatBox} />
               <Redirect from="/" to="/signup" />
             </Switch>
           </div>
