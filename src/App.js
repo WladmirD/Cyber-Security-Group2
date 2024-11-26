@@ -10,7 +10,6 @@ import marioGif from "./img/mario.gif";
 import stylesmainpage from "./MainApp.module.css";
 function App() {
   const [expanded, setExpanded] = useState(false);
-
   return (
     <Router>
       <Container style={{ backgroundColor: 'white' }}>

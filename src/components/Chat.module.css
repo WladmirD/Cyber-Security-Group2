@@ -1,0 +1,160 @@
+/* App Container */
+.appcontainer {
+  display: flex;
+  background: #ffccff;
+  padding: 10px;
+  border: 1px solid #c93;
+  height: 100vh;
+}
+
+/* Left Panel */
+.channelpanel {
+  flex: 1;
+  background: #662244;
+  color: white;
+  border-right: 2px solid #ff9966;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.channelheader {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.channellist {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.channelitem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 5px 10px;
+  border: 1px solid #ffa500;
+  border-radius: 8px;
+  background: #440022;
+}
+
+.channelitem:hover{
+  color:red;
+  cursor:pointer;
+}
+
+.channelname {
+  font-size: 16px;
+}
+
+.channelbar {
+  width: 60%;
+  height: 12px;
+  background: #aaa;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.channelbarfill {
+  height: 100%;
+  background: linear-gradient(90deg, #00ff00, #ff0000);
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.paginationbtn {
+  background: #ff9966;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: #fff;
+  margin: 0 5px;
+}
+
+/* Right Panel */
+.noticepanel {
+  flex: 1;
+  background: white;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+}
+
+.noticeheader {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.welcomebanner {
+  flex: 1;
+  text-align: center;
+  font-size: 28px;
+}
+
+.welcomebanner h1 {
+  margin-bottom: 10px;
+}
+
+.gamelogo {
+  font-size: 36px;
+  font-weight: bold;
+  color: #ffd700;
+}
+
+.silhouettebanner {
+  height: 100px;
+  width: 100%;
+  background: url("../img/check.svg") no-repeat center;
+  background-size: contain;
+}
+
+
+/* Modal overlay with a semi-transparent background */
+.modaloverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Black background with 50% opacity */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+/* Centered modal dialog box */
+.modaldialogcentered {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 500px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

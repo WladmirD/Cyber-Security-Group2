@@ -76,7 +76,7 @@ const SignUp = () => {
   };
 
   return (
-    <div style={{ display: "flex", "justify-content": "flex-start", "min-height": "0px" }} className={styles.container}>
+    <div style={{ display: "flex", "justifyContent": "flex-start", "minHeight": "0px" }} className={styles.container}>
       <form className={styles.formLogin} onSubmit={submitHandler} autoComplete="off" style={{ "width": "99%" }}>
         <h2>Sign Up</h2>
         <div>
