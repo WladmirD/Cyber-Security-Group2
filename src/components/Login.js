@@ -18,6 +18,11 @@ const Login = ({ setIsLoggedIn }) => {
 
   const connection_sqliteserver_url = 'http://localhost:5050';
 
+  const notifySuccess = () => {
+    notify('You login to your account successfully', 'success');
+    setIsLoggedIn(true);
+  }
+
   const checkData = (obj) => {
     const { email, password } = obj;
     const urlApi = connection_sqliteserver_url + '/model/login';
@@ -26,7 +31,7 @@ const Login = ({ setIsLoggedIn }) => {
       .then((response) => response.data)
       .then((data) =>
         data.success // Change this to data.success as per your server response
-          ? notify('You login to your account successfully', 'success')
+          ? notifySuccess()
           : notify('Your password or your email is wrong', 'error')
       );
     toast.promise(api, {
@@ -50,7 +55,7 @@ const Login = ({ setIsLoggedIn }) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    checkData(data).then(() => setIsLoggedIn(true));
+    checkData(data);
   };
 
   return (

@@ -17,6 +17,8 @@ import stylesmainpage from './MainApp.module.css';
 function App() {
   const [expanded, setExpanded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  console.log("isLoggedIn", isLoggedIn)
   return (
     <Router>
       <Container style={{ backgroundColor: 'white' }}>
@@ -141,9 +143,9 @@ function App() {
             <Switch>
               <Route
                 path='/login'
-                component={Login}
-                setIsLoggedIn={setIsLoggedIn}
-              />
+              >
+                <Login setIsLoggedIn={setIsLoggedIn} />
+              </Route>
               <Route path='/signup' component={SignUp} />
               <Route path='/chatbox' component={ChatBox} />
               <Redirect from='/' to='/signup' />
