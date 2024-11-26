@@ -8,7 +8,7 @@ import { notify } from './toast';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const Login = () => {
+const Login = ({ setIsLoggedIn }) => {
   const [data, setData] = useState({
     email: '',
     password: '',
@@ -50,7 +50,7 @@ const Login = () => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    checkData(data);
+    checkData(data).then(() => setIsLoggedIn(true));
   };
 
   return (
