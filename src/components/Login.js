@@ -1,37 +1,43 @@
-import React, { useState } from "react";
-import emailIcon from "../img/email.svg";
-import passwordIcon from "../img/password.svg";
-import styles from "./SignUp.module.css";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { notify } from "./toast";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import emailIcon from '../img/email.svg';
+import passwordIcon from '../img/password.svg';
+import styles from './SignUp.module.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { notify } from './toast';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
   const [data, setData] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
 
   const [touched, setTouched] = useState({});
 
-  const chaeckData = (obj) => {
+  const connection_sqliteserver_url = 'http://localhost:5050';
+
+  const checkData = (obj) => {
     const { email, password } = obj;
-    const urlApi = `https://lightem.senatorhost.com/login-react/index.php?email=${email.toLowerCase()}&password=${password}`;
+    const urlApi = connection_sqliteserver_url + '/model/login';
     const api = axios
-      .get(urlApi)
+      .post(urlApi, { email, password }) // Make a POST request and send email and password in the request body
       .then((response) => response.data)
-      .then((data) => (data.ok ? notify("You login to your account successfully", "success") : notify("Your password or your email is wrong", "error")));
+      .then((data) =>
+        data.success // Change this to data.success as per your server response
+          ? notify('You login to your account successfully', 'success')
+          : notify('Your password or your email is wrong', 'error')
+      );
     toast.promise(api, {
-      pending: "Loading your data...",
+      pending: 'Loading your data...',
       success: false,
-      error: "Something went wrong!",
+      error: 'Something went wrong!',
     });
   };
 
   const changeHandler = (event) => {
-    if (event.target.name === "IsAccepted") {
+    if (event.target.name === 'IsAccepted') {
       setData({ ...data, [event.target.name]: event.target.checked });
     } else {
       setData({ ...data, [event.target.name]: event.target.value });
@@ -44,35 +50,70 @@ const Login = () => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    chaeckData(data);
+    checkData(data);
   };
 
   return (
-    <div style={{ display: "flex", "justify-content": "flex-start", "min-height": "0px" }} className={styles.container}>
-      <form className={styles.formLogin} onSubmit={submitHandler} autoComplete="off" style={{ "width": "99%" }}>
+    <div
+      style={{
+        display: 'flex',
+        'justify-content': 'flex-start',
+        'min-height': '0px',
+      }}
+      className={styles.container}
+    >
+      <form
+        className={styles.formLogin}
+        onSubmit={submitHandler}
+        autoComplete='off'
+        style={{ width: '99%' }}
+      >
         <h2>Sign In</h2>
         <div>
           <div>
-            <input type="text" name="email" value={data.email} placeholder="E-mail" onChange={changeHandler} onFocus={focusHandler} autoComplete="off" />
-            <img src={emailIcon} alt="" />
+            <input
+              type='text'
+              name='email'
+              value={data.email}
+              placeholder='E-mail'
+              onChange={changeHandler}
+              onFocus={focusHandler}
+              autoComplete='off'
+            />
+            <img src={emailIcon} alt='' />
           </div>
         </div>
         <div>
           <div>
-            <input type="password" name="password" value={data.password} placeholder="Password" onChange={changeHandler} onFocus={focusHandler} autoComplete="off" />
-            <img src={passwordIcon} alt="" />
+            <input
+              type='password'
+              name='password'
+              value={data.password}
+              placeholder='Password'
+              onChange={changeHandler}
+              onFocus={focusHandler}
+              autoComplete='off'
+            />
+            <img src={passwordIcon} alt='' />
           </div>
         </div>
 
         <div>
-          <button type="submit">Login</button>
-          <span style={{ color: "#a29494", textAlign: "center", display: "inline-block", width: "100%" }}>
-            Don't have a account? <Link to="/signup">Create account</Link>
+          <button type='submit'>Login</button>
+          <span
+            style={{
+              color: '#a29494',
+              textAlign: 'center',
+              display: 'inline-block',
+              width: '100%',
+            }}
+          >
+            Don't have a account? <Link to='/signup'>Create account</Link>
           </span>
         </div>
       </form>
       <ToastContainer />
-    </div >
+    </div>
   );
 };
 

@@ -1,20 +1,20 @@
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 
 export const notify = (text, type) => {
-  if (type === "success") {
+  if (type === 'success') {
     toast.success(text, {
-      position: "top-right",
-      autoClose: 5000,
+      position: 'top-right',
+      autoClose: 5050,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
     });
-  } else if (type === "warning") {
+  } else if (type === 'warning') {
     toast.warn(text, {
-      position: "top-right",
-      autoClose: 5000,
+      position: 'top-right',
+      autoClose: 5050,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -23,8 +23,8 @@ export const notify = (text, type) => {
     });
   } else {
     toast.error(text, {
-      position: "top-right",
-      autoClose: 5000,
+      position: 'top-right',
+      autoClose: 5050,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
