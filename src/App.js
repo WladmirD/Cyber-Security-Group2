@@ -4,7 +4,7 @@ import {
   Route,
   Switch,
   Redirect,
-  NavLink,
+  NavLink
 } from 'react-router-dom';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
@@ -17,8 +17,14 @@ import stylesmainpage from './MainApp.module.css';
 function App() {
   const [expanded, setExpanded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const [WelcomeUser, setWelcomeUser] = useState();
   console.log("isLoggedIn", isLoggedIn)
+
+  const logout = () => {
+    setWelcomeUser('');
+    // reload page after logout
+    window.location.href = "https://localhost:3000/login";
+  };
   return (
     <Router>
       <Container style={{ backgroundColor: 'white' }}>
@@ -78,6 +84,13 @@ function App() {
               >
                 Chat Room
               </NavLink>
+              {isLoggedIn && (
+                <NavLink to='/chatbox' className='nav-link'
+                ><b>{"Welcome, " + WelcomeUser}</b></NavLink>
+              )}
+              {isLoggedIn && (
+                <NavLink to='/login' className='nav-link' onClick={logout}>Logout</NavLink>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Navbar>
@@ -144,7 +157,7 @@ function App() {
               <Route
                 path='/login'
               >
-                <Login setIsLoggedIn={setIsLoggedIn} />
+                <Login setIsLoggedIn={setIsLoggedIn} setWelcomeUser={setWelcomeUser} />
               </Route>
               <Route path='/signup' component={SignUp} />
               <Route path='/chatbox' component={ChatBox} />
