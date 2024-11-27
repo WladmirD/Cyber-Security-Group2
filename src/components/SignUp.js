@@ -123,8 +123,8 @@ const SignUp = () => {
               errors.name && touched.name
                 ? styles.unCompleted
                 : !errors.name && touched.name
-                ? styles.completed
-                : undefined
+                  ? styles.completed
+                  : undefined
             }
           >
             <input
@@ -148,8 +148,8 @@ const SignUp = () => {
               errors.email && touched.email
                 ? styles.unCompleted
                 : !errors.email && touched.email
-                ? styles.completed
-                : undefined
+                  ? styles.completed
+                  : undefined
             }
           >
             <input
@@ -173,14 +173,15 @@ const SignUp = () => {
               errors.password && touched.password
                 ? styles.unCompleted
                 : !errors.password && touched.password
-                ? styles.completed
-                : undefined
+                  ? styles.completed
+                  : undefined
             }
           >
             <input
               type='password'
               name='password'
               value={data.password}
+              minLength={6}
               placeholder='Password'
               onChange={changeHandler}
               onFocus={focusHandler}
@@ -198,16 +199,17 @@ const SignUp = () => {
               errors.confirmPassword && touched.confirmPassword
                 ? styles.unCompleted
                 : !errors.confirmPassword && touched.confirmPassword
-                ? styles.completed
-                : !errors.confirmPassword && touched.confirmPassword
-                ? styles.completed
-                : undefined
+                  ? styles.completed
+                  : !errors.confirmPassword && touched.confirmPassword
+                    ? styles.completed
+                    : undefined
             }
           >
             <input
               type='password'
               name='confirmPassword'
               value={data.confirmPassword}
+              minLength={6}
               placeholder='Confirm Password'
               onChange={changeHandler}
               onFocus={focusHandler}

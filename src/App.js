@@ -4,8 +4,10 @@ import {
   Route,
   Switch,
   Redirect,
-  NavLink
+  NavLink,
+  useHistory
 } from 'react-router-dom';
+import useForm from './components/hooks/useForm';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
 import ChatBox from './components/ChatBox';
@@ -18,10 +20,14 @@ function App() {
   const [expanded, setExpanded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [WelcomeUser, setWelcomeUser] = useState();
+  // const [UserIdCurrent, setUserIdCurrent] = useState();
+  const [UserIdCurrent, setUserIdCurrent] = useState(null);
+  const [OpenChatBox, setOpenChatBox] = useState({});
   console.log("isLoggedIn", isLoggedIn)
 
   const logout = () => {
     setWelcomeUser('');
+    setUserIdCurrent('');
     // reload page after logout
     window.location.href = "https://localhost:3000/login";
   };
@@ -157,10 +163,13 @@ function App() {
               <Route
                 path='/login'
               >
-                <Login setIsLoggedIn={setIsLoggedIn} setWelcomeUser={setWelcomeUser} />
+                <Login setIsLoggedIn={setIsLoggedIn} setWelcomeUser={setWelcomeUser} setUserIdCurrent={setUserIdCurrent} />
               </Route>
-              <Route path='/signup' component={SignUp} />
-              <Route path='/chatbox' component={ChatBox} />
+              <Route path='/signup' component={SignUp} >
+              </Route>
+              <Route path='/chatbox' component={ChatBox} >
+                <ChatBox UserIdCurrent={UserIdCurrent} setOpenChatBox={setOpenChatBox} />
+              </Route>
               <Redirect from='/' to='/signup' />
             </Switch>
           </div>

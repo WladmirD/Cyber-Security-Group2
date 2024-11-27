@@ -194,8 +194,23 @@ const getChatHistoryByRoomId = async (roomId) => {
       console.log('Connected to the SQLite database.');
 
       // Query to fetch chat history for the specific userId
-      const query = ` SELECT * FROM chathistory WHERE roomid = ?
-        ORDER BY id`;
+      const query = `
+  SELECT 
+    chathistory.userid, 
+    users.email, 
+    chathistory.chatcontent, 
+    chathistory.createddate 
+  FROM 
+    chathistory 
+  INNER JOIN 
+    users 
+  ON 
+    chathistory.userid = users.userid 
+  WHERE 
+    chathistory.roomid = ?
+  ORDER BY 
+    chathistory.id;
+`;
       db.all(query, [roomId], (err, rows) => {
         if (err) {
           console.error('Error fetching chat history:', err.message);
@@ -365,19 +380,41 @@ const getAllAvailabelRooms = async () => {
   });
 };
 
-const getUserByEmailAndPassword = async (email, password) => {
-  const db = new sqlite3.Database(databasepath);
-  const query = `SELECT * FROM users WHERE email = ? AND password = ?`;
-  const params = [email, password];
 
-  try {
-    const result = await db.get(query, params);
-    db.close();
-    return result;
-  } catch (err) {
-    console.error('Error getting user by email and password:', err.message);
-    return null;
-  }
+const getUserByEmailAndPassword = async (email, password, res) => {
+  return new Promise((resolve, reject) => {
+    const db = new sqlite3.Database(databasepath);
+    const query = "SELECT * FROM users WHERE email = ? AND password = ?";
+    try {
+      db.all(query, [email, password], (err, rows) => {
+        if (err) {
+          console.error('Error fetching user info', err.message);
+          res
+            .status(401)
+            .json({ success: false, message: 'Invalid email or password' });
+        } else {
+          console.log(`Get user credentials!`, rows);
+          res.json({ success: true, data: rows });
+        }
+
+        db.close((err) => {
+          if (err) {
+            console.error(
+              'Error closing the database connection:',
+              err.message
+            );
+          } else {
+            console.log('Database connection closed.');
+          }
+        });
+      });
+
+
+    } catch (err) {
+      console.error('Error getting user by email and password:', err.message);
+      return null;
+    }
+  });
 };
 
 // Using `async/await` to run both functions in sequence
@@ -560,14 +597,7 @@ app.post('/model/login', async (req, res) => {
   }
 
   try {
-    const user = await getUserByEmailAndPassword(email, password);
-    if (user) {
-      res.json({ success: true, data: user });
-    } else {
-      res
-        .status(401)
-        .json({ success: false, message: 'Invalid email or password' });
-    }
+    await getUserByEmailAndPassword(email, password, res);
   } catch (err) {
     console.error('Error logging in user:', err.message);
     res.status(500).json({ success: false, error: 'Internal server error' });

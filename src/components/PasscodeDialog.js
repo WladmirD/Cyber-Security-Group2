@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
+import CryptoJS from 'crypto-js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import chatmodulestyles from './Chat.module.css';
 import { io } from 'socket.io-client';
+import { notify } from './toast';
 const connection_url = 'http://localhost:3030';
 const connection_sqliteserver_url = 'http://localhost:5050';
+
 // Connect to the socket io server
 const socket = io(connection_url);
-
 //======================
-function RoomDialog({ show, onClose, roomid, passcode, showloading }) {
+
+const hashMD5 = (input) => {
+  const hash = CryptoJS.MD5(input).toString();
+  return hash;
+};
+function RoomDialog({ show, onClose, roomid, passcode, showloading, setOpenChatBox }) {
   //get current userid
   console.log('Room ID:', roomid);
   console.log('PassCode:', passcode);
@@ -22,10 +29,10 @@ function RoomDialog({ show, onClose, roomid, passcode, showloading }) {
     console.log('Password:', password);
     // validation password for room
     onClose();
-    if (passcode === password) {
+    if (passcode === hashMD5(password)) {
       getRoomInfo(roomid);
     } else {
-      alert('Wrong PassCode!');
+      alert("Wrong passcode")
       showloading(false);
     }
     // send to nodejs for create new room

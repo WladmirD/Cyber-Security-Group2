@@ -8,13 +8,14 @@ import RoomDialog from './RoomDialog';
 import PassCodeDialog from './PasscodeDialog';
 import useForm from './hooks/useForm';
 import marioIcon from '../img/marioicon.jpg';
-import batmanIcon from '../img/batman.jpg';
+import batmanIcon from '../img/anotheruser.jpg';
 let socket = undefined;
 // the address of nodjs server
 const connection_url = 'http://localhost:3030';
 const connection_sqliteserver_url = 'http://localhost:5050';
-const CurrentUserID = '1';
-const ChatBox = () => {
+
+
+const ChatBox = (DataUserIdCurrent, setOpenChatBox) => {
   const [text, setText] = useForm('text');
   const chatboxRef = useRef(null);
   const [messages, setMessages] = useForm('messages', []);
@@ -33,7 +34,7 @@ const ChatBox = () => {
   // ==============CHAT ROOM FUNCTIONS
 
   //===========get chat history
-  const fetchAllHistoryofRoom = async (roomid) => {
+  const fetchAllHistoryofRoom = async (roomid, UserIdCurrent) => {
     try {
       const node_api_url =
         connection_sqliteserver_url + '/model/getChatHistory';
@@ -50,13 +51,15 @@ const ChatBox = () => {
       }
 
       const data = await response.json(); // Parse JSON response
-      console.log('Final Chat history Data:', data); // Log the received data
+      console.log(data); // Log the received data
       // // Extract roomname and passcode
       const chatarrays = data.data.map((chatrecord) => ({
         messgcontent: chatrecord.chatcontent,
+        email: chatrecord.email,
         userid: chatrecord.userid,
         createddate: chatrecord.createddate,
       }));
+      console.log(chatarrays);
       setChatarrays(chatarrays);
       //hide loading
       setTimeout(setLoading(false), 2000);
@@ -145,7 +148,7 @@ const ChatBox = () => {
 
   const onSubmit = (e) => {
     // insert new record
-    AddNewRecordtoChatHistory('1', selectedRoomId, text);
+    AddNewRecordtoChatHistory(DataUserIdCurrent.UserIdCurrent, selectedRoomId, text);
   };
   //=====================================
 
@@ -204,6 +207,7 @@ const ChatBox = () => {
         </button>
         <PassCodeDialog
           passcode={selectedPassCode}
+          setOpenChatBox={setOpenChatBox}
           showloading={setLoading}
           roomid={selectedRoomId}
           show={ShowPasscodeDialog}
@@ -266,11 +270,15 @@ const ChatBox = () => {
                 </div>
               ) : (
                 chatarrays.map((chatrecord, index) => (
-                  <div className='Chatbox-container' key={index}>
+                  <div className={chatrecord.userid === DataUserIdCurrent.UserIdCurrent
+                    ? 'Chatbox-containerCurrentUser'
+                    : 'Chatbox-container'
+                  } key={index}>
                     {/* Avatar Section */}
                     <div className='Chatbox-avatar-section'>
                       <img
-                        src={CurrentUserID === '1' ? marioIcon : batmanIcon}
+                        src={chatrecord.userid === DataUserIdCurrent.UserIdCurrent ? marioIcon : batmanIcon}
+                        // src={marioIcon}
                         alt={`${chatrecord.userid}'s avatar`}
                         className='Chatbox-avatar'
                       />
@@ -281,7 +289,7 @@ const ChatBox = () => {
                     <div className='Chatbox-message-section'>
                       <div className='Chatbox-header'>
                         <span className='Chatbox-username'>
-                          {'User ' + chatrecord.userid}
+                          {chatrecord.email}
                         </span>
                         <span className='Chatbox-time'>
                           {chatrecord.createddate}

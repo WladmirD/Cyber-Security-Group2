@@ -8,7 +8,8 @@ import { notify } from './toast';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const Login = ({ setIsLoggedIn, setWelcomeUser }) => {
+
+const Login = ({ setIsLoggedIn, setWelcomeUser, setUserIdCurrent }) => {
   const [data, setData] = useState({
     email: '',
     password: '',
@@ -17,13 +18,15 @@ const Login = ({ setIsLoggedIn, setWelcomeUser }) => {
 
   const connection_sqliteserver_url = 'http://localhost:5050';
 
-  const notifySuccess = (email) => {
+  const notifySuccess = (email, resultdata) => {
     notify('You login to your account successfully', 'success');
     setIsLoggedIn(true);
     setWelcomeUser(email)
+    setUserIdCurrent(resultdata.data[0].userid);
   }
 
   const notifyFailure = (error) => {
+    setUserIdCurrent('');
     notify('Your password or your email is wrong', 'error');
     setIsLoggedIn(true);
     setWelcomeUser('');
@@ -38,7 +41,7 @@ const Login = ({ setIsLoggedIn, setWelcomeUser }) => {
       .then((response) => response.data)
       .then((data) =>
         data.success // Change this to data.success as per your server response
-          ? notifySuccess(email)
+          ? notifySuccess(email, data)
           : notifyFailure()
       );
     toast.promise(api, {
