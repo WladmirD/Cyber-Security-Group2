@@ -28,8 +28,9 @@ function App() {
   const logout = () => {
     setWelcomeUser('');
     setUserIdCurrent('');
+    setIsLoggedIn(false);
     // reload page after logout
-    window.location.href = "https://localhost:3000/login";
+    // window.location.href = "https://localhost:3000/login";
   };
   return (
     <Router>
@@ -164,13 +165,15 @@ function App() {
                 path='/login'
               >
                 <Login setIsLoggedIn={setIsLoggedIn} setWelcomeUser={setWelcomeUser} setUserIdCurrent={setUserIdCurrent} />
+                {/* Redirect to login if not logged in */}
+                <Redirect from="/login" to={isLoggedIn ? "/chatbox" : "/login"} />
               </Route>
               <Route path='/signup' component={SignUp} >
               </Route>
               <Route path='/chatbox' component={ChatBox} >
                 <ChatBox UserIdCurrent={UserIdCurrent} setOpenChatBox={setOpenChatBox} />
               </Route>
-              <Redirect from='/' to='/signup' />
+
             </Switch>
           </div>
         </div>
