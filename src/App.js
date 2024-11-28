@@ -17,6 +17,8 @@ import bannerIMG from './img/bannernew.jpg';
 import marioGif from './img/mario.gif';
 import stylesmainpage from './MainApp.module.css';
 function App() {
+  const [redirectAfterDelay, setRedirectAfterDelay] = useState(false);
+  const [redirectAfterDelaySignUp, setRedirectAfterDelaySugnUp] = useState(false);
   const [isSignUp, setissingup] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -33,6 +35,22 @@ function App() {
     setIsLoggedIn(false);
     setissingup(false);
   };
+
+  // Delayed redirect logic for login
+  useEffect(() => {
+    if (isLoggedIn) {
+      const timer = setTimeout(() => setRedirectAfterDelay(true), 3000);
+      return () => clearTimeout(timer); // Cleanup timer on unmount
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (isSignUp) {
+      const timer = setTimeout(() => setRedirectAfterDelaySugnUp(true), 3000);
+      return () => clearTimeout(timer); // Cleanup timer on unmount
+    }
+  }, [isSignUp]);
+
   return (
     <Router>
       <Container style={{ backgroundColor: 'white' }}>
@@ -165,15 +183,20 @@ function App() {
             <Switch>
 
               {/* control the router for Login component */}
+              {/* Login Route */}
               <Route path='/login'>
-                {/* Redirect to login if not logged in */}
-                <Redirect from="/login" to={isLoggedIn ? "/chatbox" : "/login"} />
-                <Login setIsLoggedIn={setIsLoggedIn} setWelcomeUser={setWelcomeUser} setUserIdCurrent={setUserIdCurrent} />
+                {/* Wait 3 seconds before redirecting to /chatbox */}
+                {redirectAfterDelay && <Redirect to='/chatbox' />}
+                <Login
+                  setIsLoggedIn={setIsLoggedIn}
+                  setWelcomeUser={setWelcomeUser}
+                  setUserIdCurrent={setUserIdCurrent}
+                />
               </Route>
 
               {/* control the router for Signup component */}
               <Route path='/signup' component={SignUp} >
-                <Redirect from="/signup" to={isSignUp ? "/login" : "/signup"} />
+                {redirectAfterDelaySignUp && <Redirect to='/login' />}
                 <SignUp setissingup={setissingup} />
               </Route>
 

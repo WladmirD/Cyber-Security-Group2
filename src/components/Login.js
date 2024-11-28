@@ -24,7 +24,7 @@ const Login = ({ setIsLoggedIn, setWelcomeUser, setUserIdCurrent }) => {
     setWelcomeUser(email)
     setUserIdCurrent(resultdata.data[0].userid);
     notify('You login to your account successfully', 'success');
-    alert("You login to your account successfully");
+
   }
 
   const notifyFailure = () => {

@@ -3,8 +3,8 @@ import { toast } from 'react-toastify';
 export const notify = (text, type) => {
   if (type === 'success') {
     toast.success(text, {
-      position: 'top-right',
-      autoClose: 5050,
+      position: 'top-center',
+      autoClose: 15050,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -13,8 +13,8 @@ export const notify = (text, type) => {
     });
   } else if (type === 'warning') {
     toast.warn(text, {
-      position: 'top-right',
-      autoClose: 5050,
+      position: 'top-center',
+      autoClose: 15050,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -23,8 +23,8 @@ export const notify = (text, type) => {
     });
   } else {
     toast.error(text, {
-      position: 'top-right',
-      autoClose: 5050,
+      position: 'top-center',
+      autoClose: 15050,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
