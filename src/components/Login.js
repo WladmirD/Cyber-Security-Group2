@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { notify } from './toast';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { ChartNoAxesColumnIcon } from 'lucide-react';
 
 
 const Login = ({ setIsLoggedIn, setWelcomeUser, setUserIdCurrent }) => {
@@ -19,17 +20,18 @@ const Login = ({ setIsLoggedIn, setWelcomeUser, setUserIdCurrent }) => {
   const connection_sqliteserver_url = 'http://localhost:5050';
 
   const notifySuccess = (email, resultdata) => {
-    notify('You login to your account successfully', 'success');
     setIsLoggedIn(true);
     setWelcomeUser(email)
     setUserIdCurrent(resultdata.data[0].userid);
+    notify('You login to your account successfully', 'success');
+    alert("You login to your account successfully");
   }
 
-  const notifyFailure = (error) => {
+  const notifyFailure = () => {
     setUserIdCurrent('');
-    notify('Your password or your email is wrong', 'error');
-    setIsLoggedIn(true);
+    setIsLoggedIn(false);
     setWelcomeUser('');
+    notify('Your password or your email is wrong', 'error');
   }
 
 
@@ -39,16 +41,18 @@ const Login = ({ setIsLoggedIn, setWelcomeUser, setUserIdCurrent }) => {
     const api = axios
       .post(urlApi, { email, password }) // Make a POST request and send email and password in the request body
       .then((response) => response.data)
-      .then((data) =>
+      .then((data) => {
+        // console.log(data)
         data.success // Change this to data.success as per your server response
           ? notifySuccess(email, data)
           : notifyFailure()
+      }
       );
-    toast.promise(api, {
-      pending: 'Loading your data...',
-      success: false,
-      error: 'Something went wrong!',
-    });
+    // toast.promise(api, {
+    //   pending: 'Loading your data...',
+    //   success: false,
+    //   error: 'Something went wrong!',
+    // });
   };
 
   const changeHandler = (event) => {
@@ -73,7 +77,7 @@ const Login = ({ setIsLoggedIn, setWelcomeUser, setUserIdCurrent }) => {
       style={{
         display: 'flex',
         'justify-content': 'flex-start',
-        'min-height': '0px',
+        'min-height': '0px'
       }}
       className={styles.container}
     >

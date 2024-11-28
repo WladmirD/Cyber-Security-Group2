@@ -11,32 +11,35 @@ const connection_sqliteserver_url = 'http://localhost:5050';
 const socket = io(connection_url);
 //======================
 
+
+//create hash value from password plain text of users
 const hashMD5 = (input) => {
   const hash = CryptoJS.MD5(input).toString();
   return hash;
 };
+
 function RoomDialog({ show, onClose, roomid, passcode, showloading, setOpenChatBox }) {
   //get current userid
-  console.log('Room ID:', roomid);
-  console.log('PassCode:', passcode);
-  // const roomId = '1'
-  // const originalpass = '202cb962ac59075b964b07152d234b70'
+
   const [password, setPassword] = useState('');
   // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Room id:', roomid);
-    console.log('Password:', password);
     // validation password for room
     onClose();
+
+    // valid passcode
+    // ensure the value of passcode is number only
+    console.log("passcode")
+    console.log(passcode)
+    console.log("password")
+    console.log(hashMD5(password))
     if (passcode === hashMD5(password)) {
       getRoomInfo(roomid);
     } else {
-      alert("Wrong passcode")
+      alert("Cannot valid this PassCode!")
       showloading(false);
     }
-    // send to nodejs for create new room
-    // Close the modal after submission
   };
 
   const closeDialog = () => {
@@ -65,10 +68,10 @@ function RoomDialog({ show, onClose, roomid, passcode, showloading, setOpenChatB
         socket.emit('getRoomHistoryChat', roomid);
       }
 
-      // Parse JSON response
-      const data = await response.json();
-      // Log the received data
-      console.log('Result after creating room:', data);
+      // // Parse JSON response
+      // const data = await response.json();
+      // // Log the received data
+      // console.log('Result after creating room:', data);
     } catch (error) {
       console.error('Error fetching chatrooms:', error.message);
     }

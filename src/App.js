@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -17,6 +17,7 @@ import bannerIMG from './img/bannernew.jpg';
 import marioGif from './img/mario.gif';
 import stylesmainpage from './MainApp.module.css';
 function App() {
+  const [isSignUp, setissingup] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [WelcomeUser, setWelcomeUser] = useState();
@@ -25,12 +26,12 @@ function App() {
   const [OpenChatBox, setOpenChatBox] = useState({});
   console.log("isLoggedIn", isLoggedIn)
 
+
   const logout = () => {
     setWelcomeUser('');
     setUserIdCurrent('');
     setIsLoggedIn(false);
-    // reload page after logout
-    // window.location.href = "https://localhost:3000/login";
+    setissingup(false);
   };
   return (
     <Router>
@@ -160,20 +161,27 @@ function App() {
           </div>
           <div className='col-md-10'>
             {/* Main content */}
+            {/* Main content */}
             <Switch>
-              <Route
-                path='/login'
-              >
-                <Login setIsLoggedIn={setIsLoggedIn} setWelcomeUser={setWelcomeUser} setUserIdCurrent={setUserIdCurrent} />
+
+              {/* control the router for Login component */}
+              <Route path='/login'>
                 {/* Redirect to login if not logged in */}
                 <Redirect from="/login" to={isLoggedIn ? "/chatbox" : "/login"} />
-              </Route>
-              <Route path='/signup' component={SignUp} >
-              </Route>
-              <Route path='/chatbox' component={ChatBox} >
-                <ChatBox UserIdCurrent={UserIdCurrent} setOpenChatBox={setOpenChatBox} />
+                <Login setIsLoggedIn={setIsLoggedIn} setWelcomeUser={setWelcomeUser} setUserIdCurrent={setUserIdCurrent} />
               </Route>
 
+              {/* control the router for Signup component */}
+              <Route path='/signup' component={SignUp} >
+                <Redirect from="/signup" to={isSignUp ? "/login" : "/signup"} />
+                <SignUp setissingup={setissingup} />
+              </Route>
+
+              {/* control the router for Chatbot component */}
+              <Route path='/chatbox' component={ChatBox} >
+                <ChatBox UserIdCurrent={UserIdCurrent} />
+              </Route>
+              <Redirect from="/" to="/signup" />
             </Switch>
           </div>
         </div>

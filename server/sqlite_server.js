@@ -26,7 +26,7 @@ function getTodayDate() {
   const day = String(today.getDate()).padStart(2, '0');
 
   const formattedDate = `${year}-${month}-${day}`;
-  console.log(formattedDate);
+  // console.log(formattedDate);
   return formattedDate;
 }
 // Function to create tables
@@ -119,15 +119,15 @@ const getAllUsers = async () => {
         reject(err);
         return;
       }
-      console.log('Connected to the SQLite database.');
+      //console.log('Connected to the SQLite database.');
 
       db.all('SELECT * FROM users', [], (err, rows) => {
         if (err) {
           console.error('Error fetching users:', err.message);
           reject(err);
         } else {
-          console.log('User Records:');
-          console.table(rows);
+          //console.log('User Records:');
+          //console.table(rows);
           resolve(rows);
         }
 
@@ -156,7 +156,7 @@ const getUserById = async (userId) => {
         reject(err);
         return;
       }
-      console.log('Connected to the SQLite database.');
+      //console.log('Connected to the SQLite database.');
 
       // Query to fetch user details by userId
       const query = `SELECT * FROM users WHERE userid = ?`;
@@ -227,7 +227,7 @@ const getChatHistoryByRoomId = async (roomId) => {
               err.message
             );
           } else {
-            console.log('Database connection closed.');
+            //console.log('Database connection closed.');
           }
         });
       });
@@ -269,16 +269,16 @@ const insertUser = async (name, email, password) => {
         reject(err);
         return;
       }
-      console.log('Connected to the SQLite database.');
+      //console.log('Connected to the SQLite database.');
 
       // Insert query
       const query = `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`;
-      db.run(query, [name, email, password], function (err) {
+      db.run(query, [name, email, hashMD5(password)], function (err) {
         if (err) {
           console.error('Error inserting user:', err.message);
           reject(err);
         } else {
-          console.log(`User added with ID: ${this.lastID}`);
+          //console.log(`User added with ID: ${this.lastID}`);
           resolve(this.lastID); // Resolve with the ID of the inserted record
         }
 
@@ -307,7 +307,7 @@ const createNewRoom = async (userid, roomname, passcode) => {
         reject(err);
         return;
       }
-      console.log('Connected to the SQLite database.');
+      //console.log('Connected to the SQLite database.');
 
       // encode passcode with MD5 hash function
       const encryptedpasscode = hashMD5(passcode);
@@ -322,7 +322,7 @@ const createNewRoom = async (userid, roomname, passcode) => {
             console.error('Error inserting room:', err.message);
             reject(err);
           } else {
-            console.log(`New Room created with ID: ${this.lastID}`);
+            //console.log(`New Room created with ID: ${this.lastID}`);
             resolve(this.lastID); // Resolve with the ID of the inserted record
           }
 
@@ -352,7 +352,7 @@ const getAllAvailabelRooms = async () => {
         reject(err);
         return;
       }
-      console.log('Connected to the SQLite database.');
+      //console.log('Connected to the SQLite database.');
 
       // Query to fetch chat history for the specific userId
       const query = ` SELECT * FROM chatroom ORDER BY createddate DESC`;
@@ -361,7 +361,7 @@ const getAllAvailabelRooms = async () => {
           console.error('Error fetching chat history:', err.message);
           reject(err);
         } else {
-          console.log(`Get All Available room!`, rows);
+          //console.log(`Get All Available room!`, rows);
           resolve(rows); // Resolve with the retrieved records
         }
 
@@ -384,17 +384,24 @@ const getAllAvailabelRooms = async () => {
 const getUserByEmailAndPassword = async (email, password, res) => {
   return new Promise((resolve, reject) => {
     const db = new sqlite3.Database(databasepath);
+    console.log(hashMD5(password))
+
     const query = "SELECT * FROM users WHERE email = ? AND password = ?";
     try {
-      db.all(query, [email, password], (err, rows) => {
+      db.all(query, [email, hashMD5(password)], (err, rows) => {
         if (err) {
           console.error('Error fetching user info', err.message);
           res
             .status(401)
             .json({ success: false, message: 'Invalid email or password' });
         } else {
-          console.log(`Get user credentials!`, rows);
-          res.json({ success: true, data: rows });
+          //console.log(`Get user credentials!`, rows.length);
+          if (rows.length === 1) {
+            res.json({ success: true, data: rows });
+          } else {
+            res.json({ success: false, data: null });
+          }
+
         }
 
         db.close((err) => {
@@ -404,7 +411,7 @@ const getUserByEmailAndPassword = async (email, password, res) => {
               err.message
             );
           } else {
-            console.log('Database connection closed.');
+            //console.log('Database connection closed.');
           }
         });
       });
@@ -446,8 +453,8 @@ const main = async () => {
         console.error('Success to add history chat');
       }
     );
-    const users = await getAllUsers();
-    console.log('Fetched Users:', users);
+    // const users = await getAllUsers();
+    //console.log('Fetched Users:', users);
   } catch (err) {
     console.error('Error:', err.message);
   }
@@ -584,7 +591,7 @@ app.post('/model/insertUser', async (req, res) => {
     res.json({ success: true, message: 'User added successfully', userId });
   } catch (err) {
     console.error('Error inserting user:', err.message);
-    res.status(500).json({ success: false, error: 'Internal server error' });
+    res.status(400).json({ success: false, error: 'Internal server error' });
   }
 });
 

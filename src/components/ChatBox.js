@@ -51,7 +51,7 @@ const ChatBox = (DataUserIdCurrent, setOpenChatBox) => {
       }
 
       const data = await response.json(); // Parse JSON response
-      console.log(data); // Log the received data
+      //console.log(data); // Log the received data
       // // Extract roomname and passcode
       const chatarrays = data.data.map((chatrecord) => ({
         messgcontent: chatrecord.chatcontent,
@@ -59,7 +59,7 @@ const ChatBox = (DataUserIdCurrent, setOpenChatBox) => {
         userid: chatrecord.userid,
         createddate: chatrecord.createddate,
       }));
-      console.log(chatarrays);
+      //console.log(chatarrays);
       setChatarrays(chatarrays);
       //hide loading
       setTimeout(setLoading(false), 2000);
@@ -91,9 +91,9 @@ const ChatBox = (DataUserIdCurrent, setOpenChatBox) => {
       }
 
       // Parse JSON response
-      const data = await response.json();
+      //const data = await response.json();
       // Log the received data
-      console.log('Result after creating room:', data);
+      //console.log('Result after creating room:', data);
     } catch (error) {
       console.error('Error fetching chatrooms:', error.message);
     }
@@ -117,7 +117,7 @@ const ChatBox = (DataUserIdCurrent, setOpenChatBox) => {
       }
 
       const data = await response.json(); // Parse JSON response
-      console.log('Chatroom Data:', data); // Log the received data
+      //console.log('Chatroom Data:', data); // Log the received data
       // Extract roomname and passcode
       const extractedRooms = data.data.map((room) => ({
         roomname: room.roomname,
@@ -136,9 +136,9 @@ const ChatBox = (DataUserIdCurrent, setOpenChatBox) => {
     setText('');
     setChatarrays([]);
     setLoading(true);
-    console.log('Room name:', roomname);
-    console.log('Passcode:', roompass);
-    console.log('Roomid:', roomid);
+    // console.log('Room name:', roomname);
+    // console.log('Passcode:', roompass);
+    // console.log('Roomid:', roomid);
     setSelectedRoomId(roomid);
     setSelectedPassCode(roompass);
     //set room name for welcome message
@@ -213,7 +213,7 @@ const ChatBox = (DataUserIdCurrent, setOpenChatBox) => {
           show={ShowPasscodeDialog}
           onClose={() => setShowPasscodeDialog(false)}
         />
-        <RoomDialog show={showDialog} onClose={() => setShowDialog(false)} />
+        <RoomDialog DataUserIdCurrent={DataUserIdCurrent} show={showDialog} onClose={() => setShowDialog(false)} />
         <hr></hr>
         <div className={chatmodulestyles.appcontainer}>
           {/* Left Panel: Channel List */}

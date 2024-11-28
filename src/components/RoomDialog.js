@@ -2,26 +2,36 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import chatmodulestyles from './Chat.module.css';
 import { io } from 'socket.io-client';
+import { notify } from './toast';
 const connection_url = 'http://localhost:3030';
 const connection_sqliteserver_url = 'http://localhost:5050';
 // Connect to the socket io server
 const socket = io(connection_url);
 
 //======================
-function RoomDialog({ show, onClose }) {
-  //get current userid
-  const currentuserID = '1';
+function RoomDialog({ DataUserIdCurrent, show, onClose }) {
+  console.log('test')
+  console.log(DataUserIdCurrent)
   const [roomName, setRoomName] = useState('');
   const [password, setPassword] = useState('');
   // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Room Name:', roomName);
-    console.log('Password:', password);
+    // console.log('Room Name:', roomName);
+    // console.log('Password:', password);
     // validation password for room
     onClose();
-    // send to nodejs for create new room
-    CreateNewChatRoom(currentuserID, roomName, password);
+
+    // valid - sanitization the password  and roomName
+    const regexName = /^[a-zA-Z0-9 ]+$/;
+    const regexOnlyNumber = /^\d+$/;
+
+    if (regexName.test(roomName.trim()) && regexOnlyNumber.test(password.trim())) {
+      CreateNewChatRoom(DataUserIdCurrent, roomName, password);
+    } else {
+      alert("Passwords should only be digital numbers!");
+    }
+
     // Close the modal after submission
   };
 
@@ -47,10 +57,10 @@ function RoomDialog({ show, onClose }) {
         socket.emit('getAvailableChatRooms', 'refresh');
       }
 
-      // Parse JSON response
-      const data = await response.json();
-      // Log the received data
-      console.log('Result after creating room:', data);
+      // // Parse JSON response
+      // const data = await response.json();
+      // // Log the received data
+      // console.log('Result after creating room:', data);
     } catch (error) {
       console.error('Error fetching chatrooms:', error.message);
     }

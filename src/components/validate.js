@@ -1,5 +1,7 @@
 export const validate = (data, type) => {
   const errors = {};
+  const regexName = /^[a-zA-Z0-9 ]+$/;
+  const regexOnlyNumber = /^\d+$/;
 
   if (!data.email) {
     errors.email = "Email is Required!";
@@ -20,9 +22,19 @@ export const validate = (data, type) => {
   if (type === "signUp") {
     if (!data.name.trim()) {
       errors.name = "Username is Required!";
+
+      //sanitize user name to avoid sql injection
+    } else if (!regexName.test(data.name.trim())) {
+      errors.name = "Invalid name format";
+
+      //check if the user name containing only digits
+    } else if (regexOnlyNumber.test(data.name.trim())) {
+      errors.name = "Invalid name format";
+
     } else {
       delete errors.name;
     }
+
     if (!data.confirmPassword) {
       errors.confirmPassword = "Confirm the Password";
     } else if (!(data.confirmPassword === data.password)) {

@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 // Axios
 import axios from 'axios';
 
-const SignUp = () => {
+const SignUp = ({ setissingup }) => {
   const [data, setData] = useState({
     name: '',
     email: '',
@@ -54,8 +54,14 @@ const SignUp = () => {
         const response = await axios.post(urlApi, data);
         if (response.data.success) {
           // Handle successful sign up
+          setissingup(true);
+          alert("Successful Sign Up");
+          notify('Successful Sign Up', 'success');
         } else {
           // Handle error
+          setissingup(false);
+          alert("Something Wrong in Sign Up");
+          notify("Something Wrong in Sign Up", "warning");
         }
       };
       pushData();
