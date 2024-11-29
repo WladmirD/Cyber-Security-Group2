@@ -89,27 +89,27 @@ function App() {
               >
                 Contact Us
               </NavLink>
-              <NavLink
+              {/* <NavLink
                 to='/login'
                 className='nav-link'
                 activeClassName='active'
               >
                 Login
-              </NavLink>
-              <NavLink
+              </NavLink>  */}
+              {/* <NavLink
                 to='/signup'
                 className='nav-link'
                 activeClassName='active'
               >
                 Sign Up
-              </NavLink>
-              <NavLink
+              </NavLink> */}
+              {/* <NavLink
                 to='/chatbox'
                 className='nav-link'
                 activeClassName='active'
               >
                 Chat Room
-              </NavLink>
+              </NavLink> */}
               {isLoggedIn && (
                 <NavLink to='/chatbox' className='nav-link'
                 ><b>{"Welcome, " + WelcomeUser}</b></NavLink>
@@ -202,6 +202,7 @@ function App() {
 
               {/* control the router for Chatbot component */}
               <Route path='/chatbox' component={ChatBox} >
+                <Redirect from="/chatbox" to={UserIdCurrent ? "/chatbox" : "/"} />
                 <ChatBox UserIdCurrent={UserIdCurrent} />
               </Route>
               <Redirect from="/" to="/signup" />

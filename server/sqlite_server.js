@@ -401,7 +401,6 @@ const getUserByEmailAndPassword = async (email, password, res) => {
           } else {
             res.json({ success: false, data: null });
           }
-
         }
 
         db.close((err) => {
@@ -430,31 +429,9 @@ const main = async () => {
     console.log('Creating tables...');
     await createTables(); // Wait for tables to be created
     console.log('Tables created. Fetching users...');
-    const hashpass = hashMD5('123456789abCD!');
-    const userId1 = await insertUser('tester 1', 'tester1@gmail.com', hashpass);
+    const hashpass = '123123';
+    const userId1 = await insertUser('harish', 'harish@gmail.com', hashpass);
     console.log(`Inserted User ID: ${userId1}`);
-    const userI2 = await insertUser('tester 2', 'tester2@gmail.com', hashpass);
-    console.log(`Inserted User ID: ${userI2}`);
-    // add new room
-    const hash_roomcode = hashMD5('123');
-    const roomid = await createNewRoom(userId1, 'room 1', hash_roomcode);
-    // add chat history
-    const todaydate = getTodayDate();
-
-    await insertChatHistory(
-      userId1,
-      roomid,
-      'hello world',
-      todaydate,
-      (err, result) => {
-        if (err) {
-          console.error('Error inserting chat history:', err);
-        }
-        console.error('Success to add history chat');
-      }
-    );
-    // const users = await getAllUsers();
-    //console.log('Fetched Users:', users);
   } catch (err) {
     console.error('Error:', err.message);
   }

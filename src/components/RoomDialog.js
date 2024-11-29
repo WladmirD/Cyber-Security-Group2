@@ -29,7 +29,7 @@ function RoomDialog({ DataUserIdCurrent, show, onClose }) {
     if (regexName.test(roomName.trim()) && regexOnlyNumber.test(password.trim())) {
       CreateNewChatRoom(DataUserIdCurrent, roomName, password);
     } else {
-      alert("Passwords should only be digital numbers!");
+      notify("Cannot valid Room or Password!", "error");
     }
 
     // Close the modal after submission
@@ -50,8 +50,7 @@ function RoomDialog({ DataUserIdCurrent, show, onClose }) {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       } else {
-        alert('Created new room successfully!');
-
+        notify("Created new room successfully!", "success");
         // call socket io to resfresh available rooms
         // Emit event to Socket.IO to refresh available rooms
         socket.emit('getAvailableChatRooms', 'refresh');

@@ -9,6 +9,9 @@ import PassCodeDialog from './PasscodeDialog';
 import useForm from './hooks/useForm';
 import marioIcon from '../img/marioicon.jpg';
 import batmanIcon from '../img/anotheruser.jpg';
+import { notify } from './toast';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 let socket = undefined;
 // the address of nodjs server
 const connection_url = 'http://localhost:3030';
@@ -85,8 +88,6 @@ const ChatBox = (DataUserIdCurrent, setOpenChatBox) => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       } else {
-        // call socket io to resfresh available rooms
-        // Emit event to Socket.IO to refresh available rooms
         socket.emit('onTextChange', roomid);
       }
 
@@ -103,6 +104,7 @@ const ChatBox = (DataUserIdCurrent, setOpenChatBox) => {
   const fetchChatrooms = async () => {
     try {
       setText('');
+      setCurrentRoonName('');
       const node_api_url =
         connection_sqliteserver_url + '/model/getAllChatrooms';
       const response = await fetch(node_api_url, {
@@ -146,10 +148,29 @@ const ChatBox = (DataUserIdCurrent, setOpenChatBox) => {
     setShowPasscodeDialog(true);
   };
 
-  const onSubmit = (e) => {
-    // insert new record
-    AddNewRecordtoChatHistory(DataUserIdCurrent.UserIdCurrent, selectedRoomId, text);
+  // Handle to avoid XSS attack
+  const escapeXSS = (input) => {
+    if (!input) return "";
+    return input
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#x27;")
+      .replace(/\//g, "&#x2F;");
   };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (selectedRoomId) {
+      var sanitizetext = escapeXSS(text);
+      // insert new record
+      AddNewRecordtoChatHistory(DataUserIdCurrent.UserIdCurrent, selectedRoomId, sanitizetext);
+    } else {
+      notify("Please choose room to chat!", "error");
+    }
+  };
+
   //=====================================
 
   const buttonTriggers = ['Enter'];
@@ -179,6 +200,7 @@ const ChatBox = (DataUserIdCurrent, setOpenChatBox) => {
     });
 
     socket.on('on-text-change', (data) => {
+      notify("New message!", "success");
       setText('');
       fetchAllHistoryofRoom(data);
       chatboxRef.current.scrollTop = chatboxRef.current.scrollHeight;
@@ -201,6 +223,19 @@ const ChatBox = (DataUserIdCurrent, setOpenChatBox) => {
     >
       <div style={{ width: '99%' }}>
         <h2 style={{ fontFamily: 'Russo One' }}>Welcome to Game Chat Room</h2>
+        {/* Add the ToastContainer */}
+        <ToastContainer
+          position="center-center"
+          autoClose={5000} // Closes the toast automatically after 5 seconds
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
         {/* RoomDialog Component */}
         <button className='btn btn-success' onClick={() => setShowDialog(true)}>
           Create New Room
@@ -254,7 +289,7 @@ const ChatBox = (DataUserIdCurrent, setOpenChatBox) => {
               className={chatmodulestyles.welcomebanner}
               style={{ width: '100%', height: '500px', overflowY: 'scroll' }}
             >
-              <h1>{CurrentRoonName}</h1>
+              <h1>{CurrentRoonName !== null ? CurrentRoonName : "Choose a room to chat"}</h1>
 
               {/* Right Panel: Chat history */}
               {loading ? (
@@ -271,9 +306,8 @@ const ChatBox = (DataUserIdCurrent, setOpenChatBox) => {
               ) : (
                 chatarrays.map((chatrecord, index) => (
                   <div className={chatrecord.userid === DataUserIdCurrent.UserIdCurrent
-                    ? 'Chatbox-containerCurrentUser'
-                    : 'Chatbox-container'
-                  } key={index}>
+                    ? 'containerCurrentUser'
+                    : 'Chatbox-container'} key={index}>
                     {/* Avatar Section */}
                     <div className='Chatbox-avatar-section'>
                       <img
@@ -295,7 +329,10 @@ const ChatBox = (DataUserIdCurrent, setOpenChatBox) => {
                           {chatrecord.createddate}
                         </span>
                       </div>
-                      <div className='Chatbox-message'>
+                      <div className={chatrecord.userid === DataUserIdCurrent.UserIdCurrent
+                        ? 'Chatbox-message-me'
+                        : 'Chatbox-message'
+                      }>
                         {chatrecord.messgcontent}
                       </div>
                     </div>
